@@ -1,0 +1,26 @@
+server:
+  port: 10011 #端口
+spring:
+  application:
+    name: demo-core #应用名
+#eureka配置
+eureka:
+  client:
+    healthcheck:
+      enabled: true #健康检测方式，需要添加spring-boot-starter-actuator
+    serviceUrl:
+      #eureka服务端的地址，如果多个用","隔开
+      defaultZone: http://localhost:10086/eureka
+    register-with-eureka: true # 是否注册⾃己的信息到EurekaServer，默认是true
+    fetch-registry: true # 是否拉取其它服务的信息，默认是true
+    registry-fetch-interval-seconds: 5 #表示eureka client间隔多久去拉取服务注册信息，默认为30秒
+    instance-info-replication-interval-seconds: 5 #客户端实例信息变化上报到eureka服务的时间周期，值越小上报越频繁，eureka服务器应用状态管理一致性越高
+  instance:
+    prefer-ip-address: true # 当调⽤用getHostname获取实例例的hostname时，返回ip⽽而不不是 host名称
+    instance-id: ${spring.application.name}:${spring.cloud.client.ip-address}:${server.port}
+    lease-renewal-interval-in-seconds: 5 #eureka client发送心跳给server端的频率
+    lease-expiration-duration-in-seconds: 15 #默认90秒，eureka server至上一次收到client的心跳之后，等待下一次心跳的超时时间，在这个时间内若没收到下一次心跳，则将移除该instance。
+    metadata-map:
+      grayscale: core2 # 可以理解为元数据，一般用来区分是哪个实例
+
+

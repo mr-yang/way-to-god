@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/2002/xmlspec/dtd/2.10/xmlspec.dtd"> -->
+<configuration status="OFF" monitorInterval="1800">
+    <properties>
+        <!-- 基本的文件的输出信息的配置 -->
+        <property name="log.base.path">../log</property>
+    </properties>
+    <appenders>
+        <console name="CONSOLE" target="SYSTEM_OUT">
+            <patternLayout charset="UTF-8"
+                           pattern="%date{yyyy-MM-dd_HH:mm:ss}[%-5level][%t]%logger[%L]-%message%n" />
+        </console>
+        <rollingFile name="ROLLINGFILE_DEBUG"
+                     fileName="${log.base.path}/core_goldenfleece_server.log"
+                     filePattern="${log.base.path}/core_goldenfleece_server.log.%date{yyyyMMdd}">
+            <filters>
+                <!-- onMatch="ACCEPT" 接收level级别为debug，onMismatch="NEUTRAL"可以接受这个级别以上的日志输出到这个路径中 -->
+                <thresholdFilter level="debug" onMatch="ACCEPT"
+                                 onMismatch="NEUTRAL" />
+                <thresholdFilter level="info" onMatch="ACCEPT"
+                                 onMismatch="DENY" />
+            </filters>
+            <patternLayout charset="UTF-8"
+                           pattern="%date{yyyy-MM-dd_HH:mm:ss}[%-5level][%t]%logger[%L]-%message%n" />
+            <policies>
+                <timeBasedTriggeringPolicy />
+            </policies>
+        </rollingFile>
+        <rollingFile name="ROLLINGFILE_WARN"
+                     fileName="${log.base.path}/error.log"
+                     filePattern="${log.base.path}/error.log.%date{yyyyMMdd}">
+            <filters>
+                <thresholdFilter level="warn" onMatch="ACCEPT"
+                                 onMismatch="DENY" />
+            </filters>
+            <patternLayout charset="UTF-8"
+                           pattern="%date{yyyy-MM-dd_HH:mm:ss}[%-5level][%t]%logger[%L]-%message%n" />
+            <policies>
+                <timeBasedTriggeringPolicy />
+            </policies>
+        </rollingFile>
+        <RollingFile name="fileMpsp" fileName="${log.base.path}/mpsp/mpsp.log"
+                     filePattern="${log.base.path}/mpsp/mpsp.log.%d{yyyy-MM-dd}">
+            <PatternLayout charset="UTF-8" pattern="%date{yyyyMMddHHmmss},%message%n" />
+            <Policies>
+                <TimeBasedTriggeringPolicy modulate="true"
+                                           interval="1" />
+            </Policies>
+        </RollingFile>
+        <async name="ASYNC_DEBUG">
+            <appenderRef ref="ROLLINGFILE_DEBUG" />
+        </async>
+        <async name="ASYNC_WARN">
+            <appenderRef ref="ROLLINGFILE_WARN" />
+        </async>
+        <async name="ASYNC_MPSP">
+            <appenderRef ref="fileMpsp" />
+        </async>
+    </appenders>
+    <loggers>
+        <logger name="org.springframework" level="info" additivity="false">
+            <appender-ref ref="ASYNC_DEBUG" />
+            <appender-ref ref="ASYNC_WARN" />
+            <appender-ref ref="CONSOLE" />
+        </logger>
+        <!-- ======================================= -->
+        <!-- JDBC相关的日志 -->
+        <!-- ======================================= -->
+        <logger name="java.sql" level="DEBUG" additivity="false">
+            <appender-ref ref="ASYNC_DEBUG"/>
+            <appender-ref ref="ASYNC_WARN"/>
+            <appender-ref ref="CONSOLE"/>
+        </logger>
+        <logger name="org.apache.ibatis" level="DEBUG" additivity="false">
+            <appender-ref ref="ASYNC_DEBUG"/>
+            <appender-ref ref="ASYNC_WARN"/>
+            <appender-ref ref="CONSOLE"/>
+        </logger>
+        <logger name="org.mybatis" level="DEBUG" additivity="false">
+            <appender-ref ref="ASYNC_DEBUG"/>
+            <appender-ref ref="ASYNC_WARN"/>
+            <appender-ref ref="CONSOLE"/>
+        </logger>
+
+        <logger name="druid.sql" level="warn" additivity="false">
+            <appender-ref ref="ASYNC_DEBUG"/>
+            <appender-ref ref="ASYNC_WARN"/>
+            <appender-ref ref="CONSOLE"/>
+        </logger>
+        <logger name="io.lettuce.core" level="warn" additivity="false">
+            <appender-ref ref="ASYNC_DEBUG"/>
+            <appender-ref ref="ASYNC_WARN"/>
+            <appender-ref ref="CONSOLE"/>
+        </logger>
+        <logger name="org.hibernate.validator" level="info" additivity="false">
+            <appender-ref ref="ASYNC_DEBUG"/>
+            <appender-ref ref="ASYNC_WARN"/>
+            <appender-ref ref="CONSOLE"/>
+        </logger>
+        <logger name="com.netflix.discovery" level="warn" additivity="false">
+            <appender-ref ref="ASYNC_DEBUG"/>
+            <appender-ref ref="ASYNC_WARN"/>
+            <appender-ref ref="CONSOLE"/>
+        </logger>
+        <logger name="org.apache.http" level="info" additivity="false">
+            <appender-ref ref="ASYNC_DEBUG"/>
+            <appender-ref ref="ASYNC_WARN"/>
+            <appender-ref ref="CONSOLE"/>
+        </logger>
+        <root level="DEBUG">
+            <appender-ref ref="ASYNC_DEBUG" />
+            <appender-ref ref="ASYNC_WARN" />
+            <appender-ref ref="CONSOLE" />
+        </root>
+    </loggers>
+</configuration>
