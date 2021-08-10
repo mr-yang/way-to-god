@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
  * @date 2021-08-09 13:44
  * @describe
  */
-@FeignClient(name = "demo-core", configuration = FeignDefaultConfig.class,fallbackFactory = CoreFallBackFactory.class)
+@FeignClient(name = "demo-test-grayscale", configuration = FeignDefaultConfig.class,fallbackFactory = CoreFallBackFactory.class)
 public interface CoreFeignService {
 
     @PostMapping("/testAppGrayscale")

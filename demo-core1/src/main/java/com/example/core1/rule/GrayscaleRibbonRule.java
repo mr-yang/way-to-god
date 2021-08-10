@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * @author tianxiaoyang
  * @date 2021-08-09 09:54
- * @describe 自定义灰度负载均衡策略
+ * @describe 自定义灰度负载均衡策略，暂时没有使用
  */
 @Slf4j
 public class GrayscaleRibbonRule extends AbstractLoadBalancerRule {

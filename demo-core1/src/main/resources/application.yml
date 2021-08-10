@@ -24,8 +24,8 @@ eureka:
 demo-core:
   ribbon:
     #Ribbon分发请求策略，使用自定义的灰度策略，默认是轮询
-    NFLoadBalancerRuleClassName: com.example.core1.rule.GrayscaleRibbonRule
-#    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RandomRule
+#    NFLoadBalancerRuleClassName: com.example.core1.rule.GrayscaleRibbonRule
+    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RandomRule
     #建立链接超时时间
     ConnectTimeout: 5000
     #读超时时间

@@ -28,6 +28,9 @@ public class GrayscaleController {
 
     @PostMapping("/testGrayscale")
     public String testGrayscale(@RequestBody TestGrayscale testGrayscale){
+        if(testConfig == null){
+            return "测试网关到应用灰度需要修改active启动相应的应用";
+        }
         String tip = testConfig.getGrayscale().getTip();
         log.info(tip+"，收到的请求数据为 {}",testGrayscale);
         return tip;
@@ -35,6 +38,14 @@ public class GrayscaleController {
 
     @PostMapping("/testAppGrayscale")
     public String testAppGrayscale(@RequestBody TestGrayscale testGrayscale){
-        return coreFeignService.testAppGrayscale(testGrayscale);
+        //因为测试应用和灰度应用都是同一个，需要区分是否是灰度应用
+        //如果是测试应用调用灰度应用
+        if(testConfig == null || testConfig.getGrayscale() == null){
+            return coreFeignService.testAppGrayscale(testGrayscale);
+        }
+        //如果是灰度应用直接返回信息
+        String tip = testConfig.getGrayscale().getTip();
+        log.info(tip+"，收到的请求数据为 {}",testGrayscale);
+        return tip;
     }
 }
