@@ -1,8 +1,8 @@
 server:
-  port: 10012 #端口
+  port: 10021 #端口
 spring:
   application:
-    name: demo-core #应用名
+    name: demo-test-grayscale #应用名
 #eureka配置
 eureka:
   client:
@@ -21,6 +21,8 @@ eureka:
     lease-renewal-interval-in-seconds: 5 #eureka client发送心跳给server端的频率
     lease-expiration-duration-in-seconds: 15 #默认90秒，eureka server至上一次收到client的心跳之后，等待下一次心跳的超时时间，在这个时间内若没收到下一次心跳，则将移除该instance。
     metadata-map:
-      grayscale: core2 # 可以理解为元数据，一般用来区分是哪个实例
+      version: release # 可以理解为元数据，一般用来区分是哪个实例
 
-
+test:
+  grayscale:
+    tip: 我是正式核心-应用2

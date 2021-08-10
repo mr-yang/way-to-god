@@ -1,8 +1,8 @@
 server:
-  port: 10010 #端口
+  port: 10031 #端口
 spring:
   application:
-    name: demo-core #应用名
+    name: demo-test-grayscale #应用名
 #eureka配置
 eureka:
   client:
@@ -20,15 +20,9 @@ eureka:
     instance-id: ${spring.application.name}:${spring.cloud.client.ip-address}:${server.port}
     lease-renewal-interval-in-seconds: 5 #eureka client发送心跳给server端的频率
     lease-expiration-duration-in-seconds: 15 #默认90秒，eureka server至上一次收到client的心跳之后，等待下一次心跳的超时时间，在这个时间内若没收到下一次心跳，则将移除该instance。
-#核心服务
-demo-core:
-  ribbon:
-    #Ribbon分发请求策略，使用自定义的灰度策略，默认是轮询
-    NFLoadBalancerRuleClassName: com.example.core1.rule.GrayscaleRibbonRule
-#    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RandomRule
-    #建立链接超时时间
-    ConnectTimeout: 5000
-    #读超时时间
-    ReadTimeout: 20000
-    MaxTotalConnections: 200
-    MaxConnectionsPerHost: 100
+    metadata-map:
+      version: grayscale # 可以理解为元数据，一般用来区分是哪个实例
+
+test:
+  grayscale:
+    tip: 我是灰度核心-应用2

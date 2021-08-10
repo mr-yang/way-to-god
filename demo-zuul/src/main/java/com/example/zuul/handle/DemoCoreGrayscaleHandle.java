@@ -36,9 +36,9 @@ public class DemoCoreGrayscaleHandle implements GrayscaleHandle{
         String grayscaleId = String.valueOf(grayscaleIdTem);
         RibbonFilterContextHolder.clearCurrentContext();
         if("666".equals(grayscaleId)){
-            RibbonFilterContextHolder.getCurrentContext().add("grayscale","core2");
+            RibbonFilterContextHolder.getCurrentContext().add("version","grayscale");
         }else{
-            RibbonFilterContextHolder.getCurrentContext().add("grayscale","core1");
+            RibbonFilterContextHolder.getCurrentContext().add("version","release");
         }
     }
 }

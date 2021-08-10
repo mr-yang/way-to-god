@@ -23,7 +23,7 @@ public class GrayscaleConfig {
     //灰度维度：应用、接口，只是为了演示简单，暂时应用维度灰度
     @PostConstruct
     private void initConfig(){
-        map.put("demo-core",new GrayscaleBean("grayscaleId","demoCoreGrayscaleHandle"));
+        map.put("demo-test-grayscale",new GrayscaleBean("grayscaleId","demoCoreGrayscaleHandle"));
     }
 
     //获取所有灰度信息

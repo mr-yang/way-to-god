@@ -7,7 +7,8 @@ zuul:
     #prefix: /api # 添加路由前缀
     #strip-prefix: true # 代理前缀默认会从请求路径中移除，通过该设置关闭移除功能。
     routes:
-        demo-core: /demo-core/** # 这⾥是映射路径
+        demo-core: /demo-core/** # 测试应用到应用灰度
+        demo-test-grayscale: /demo-test-grayscale/** # 测试网关到应用灰度
 
 
 #eureka配置
@@ -29,7 +30,7 @@ eureka:
 ribbon:
     filter:
         metadata:
-            enabled: true
+            enabled: true #
     ConnectTimeout: 250 # 连接超时时间(ms)
     ReadTimeout: 2000 # 通信超时时间(ms)
     OkToRetryOnAllOperations: false # 是否对所有操作重试

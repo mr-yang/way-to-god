@@ -9,16 +9,20 @@
         <outputRelativeToContentRoot value="true" />
         <module name="demo-zuul" />
         <module name="way-to-god" />
-        <module name="demo-core2" />
         <module name="demo-core1" />
         <module name="demo-eureka" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="demo-core2" target="1.8" />
+      <module name="demo-core3" target="1.8" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="demo-core1" options="-parameters" />
       <module name="demo-core2" options="-parameters" />
+      <module name="demo-core3" options="-parameters" />
       <module name="demo-eureka" options="-parameters" />
       <module name="demo-zuul" options="-parameters" />
     </option>

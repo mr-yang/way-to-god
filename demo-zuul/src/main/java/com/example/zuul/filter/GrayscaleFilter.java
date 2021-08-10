@@ -18,8 +18,10 @@ import org.springframework.stereotype.Component;
  * @author tianxiaoyang
  * @date 2021-08-04 15:22
  * @describe 灰度发布的Filter
- * 测试地址：http://localhost:10001/demo-core/testGrayscale
- * 测试报文：{"grayscaleId":"666"}，grayscaleId为666走core2服务，其他值都走core1服务
+ * 测试地址：http://localhost:10001/demo-test-grayscale/testGrayscale
+ * 测试报文：{"grayscaleId":"666"}，grayscaleId为666走灰度服务，其他值都走正式服务
+ *
+ * 参考文章：https://perkins4j2.github.io/posts/25628/
  */
 @Slf4j
 @Component
