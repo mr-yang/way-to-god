@@ -40,7 +40,11 @@ public class RedisDistributedLocker implements DistributedLocker {
         lock.lock(timeout, unit);
         return lock;
     }
-
+    @Override
+    public boolean tryLock(String lockKey) {
+        RLock lock = redissonClient.getLock(lockKey);
+        return lock.tryLock();
+    }
     @Override
     public boolean tryLock(String lockKey, TimeUnit unit, int waitTime, int leaseTime) {
         RLock lock = redissonClient.getLock(lockKey);

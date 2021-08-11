@@ -1,7 +1,8 @@
 package com.example.core1.bean;
 
 import lombok.Data;
-import org.hibernate.validator.constraints.NotEmpty;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * @author tianxiaoyang
@@ -10,6 +11,9 @@ import org.hibernate.validator.constraints.NotEmpty;
  */
 @Data
 public class TestLockBean {
-    @NotEmpty(message = "userId 不能为空，打印谁获取到锁需要")
+    @NotNull(message = "userId 不能为空，打印谁获取到锁需要")
     private String userId;
+
+    //是否快速失败，也就是拿不到锁直接响应失败
+    private boolean isFastFail;
 }
