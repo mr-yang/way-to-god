@@ -1,0 +1,33 @@
+#属性解释
+#https://github.com/redisson/redisson/wiki/2.-%E9%85%8D%E7%BD%AE%E6%96%B9%E6%B3%95#271-%E5%93%A8%E5%85%B5%E6%A8%A1%E5%BC%8F%E8%AE%BE%E7%BD%AE
+sentinelServersConfig:
+  idleConnectionTimeout: 10000
+#  pingTimeout: 1000
+  connectTimeout: 10000
+  timeout: 3000
+  retryAttempts: 3
+  retryInterval: 1500
+#  reconnectionTimeout: 3000
+#  failedAttempts: 3
+#  password: pbmp_redis
+  subscriptionsPerConnection: 5
+  clientName: demo-redis
+  loadBalancer: !<org.redisson.connection.balancer.RoundRobinLoadBalancer> {}
+#  slaveSubscriptionConnectionMinimumIdleSize: 1
+#  slaveSubscriptionConnectionPoolSize: 50
+  slaveConnectionMinimumIdleSize: 32
+  slaveConnectionPoolSize: 64
+  masterConnectionMinimumIdleSize: 32
+  masterConnectionPoolSize: 64
+  readMode: "SLAVE"
+  sentinelAddresses:
+    - "redis://10.10.57.42:26379"
+    - "redis://10.10.57.41:26479"
+    - "redis://10.10.57.42:26380"
+  masterName: "mymaster"
+  database: 0
+threads: 0
+nettyThreads: 0
+codec: !<org.redisson.codec.JsonJacksonCodec> {}
+transportMode: "NIO"
+#lockWatchdogTimeout: 30000 #监控锁的看门狗超时，单位：毫秒

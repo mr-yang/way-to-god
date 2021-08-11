@@ -3,6 +3,23 @@ server:
 spring:
   application:
     name: demo-core #应用名
+
+  #redis配置，需要放到spring下面
+  redis:
+    redisson: #配置redisson配置文件名称，如果名字为redisson.yaml可以不配置
+      file: classpath:redisson.yaml
+    database: 0
+    #password: pbmp_redis
+    jedis: #连接池配置
+      pool:
+        max-active: 8 #最大连接数
+        max-wait: -1 #最大等待时间
+        max-idle: 8 #最大空闲连接数
+        min-idle: 0 #最小空闲连接数
+    # ----sentinel 哨兵----
+    sentinel:
+      master: mymaster
+      nodes: 10.10.57.42:26379,10.10.57.41:26479,10.10.57.42:26380
 #eureka配置
 eureka:
   client:
@@ -20,6 +37,10 @@ eureka:
     instance-id: ${spring.application.name}:${spring.cloud.client.ip-address}:${server.port}
     lease-renewal-interval-in-seconds: 5 #eureka client发送心跳给server端的频率
     lease-expiration-duration-in-seconds: 15 #默认90秒，eureka server至上一次收到client的心跳之后，等待下一次心跳的超时时间，在这个时间内若没收到下一次心跳，则将移除该instance。
+
+
+
+
 #核心服务
 demo-core:
   ribbon:
