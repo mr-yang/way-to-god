@@ -33,13 +33,19 @@
             <version>3.16.1</version>
         </dependency>
 
-        <!--  https://github.com/redisson/redisson/tree/master/redisson-spring-data#spring-data-redis-integration      -->
-        <!-- for Spring Data Redis v.2.2.x -->
-<!--        <dependency>-->
-<!--            <groupId>org.redisson</groupId>-->
-<!--            <artifactId>redisson-spring-data-22</artifactId>-->
-<!--            <version>3.16.1</version>-->
-<!--        </dependency>-->
+        <!--curator的版本需要和zookeeper的版本符合-->
+        <dependency>
+            <groupId>org.apache.curator</groupId>
+            <artifactId>curator-framework</artifactId>
+            <version>2.11.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.curator</groupId>
+            <artifactId>curator-recipes</artifactId>
+            <version>2.11.1</version>
+        </dependency>
+
+
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
