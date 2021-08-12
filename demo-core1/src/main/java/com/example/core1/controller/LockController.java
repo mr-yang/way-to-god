@@ -22,10 +22,15 @@ public class LockController {
 
     @Resource
     private LockService lockService;
-    @PostMapping("/testLock")
-    public String testLock(@RequestBody @Valid TestLockBean testLockBean){
-        lockService.testLockCount(testLockBean);
-        return "执行成功，请查看日志看结果";
+    @PostMapping("/testRedisLock")
+    public String testRedisLock(@RequestBody @Valid TestLockBean testLockBean){
+        lockService.testRedisLockCount(testLockBean);
+        return "Redis分布式锁，执行成功。";
     }
 
+    @PostMapping("/testZookeeperLock")
+    public String testZookeeperLock(@RequestBody @Valid TestLockBean testLockBean){
+        lockService.testZookeeperLockCount(testLockBean);
+        return "Zookeeper分布式锁，执行成功。";
+    }
 }

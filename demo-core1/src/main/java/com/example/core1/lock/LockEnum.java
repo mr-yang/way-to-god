@@ -9,7 +9,9 @@ public enum LockEnum {
 
     NO_LOCK(0, "无锁"),
     REDIS_BIO_LOCK(1, "Redis阻塞锁"),
-    REDIS_NIO_LOCK(2, "Redis非阻塞锁，快速失败");
+    REDIS_NIO_LOCK(2, "Redis非阻塞锁，快速失败"),
+    ZK_BIO_LOCK(3, "Zookeeper阻塞锁"),
+    ZK_NIO_LOCK(4, "Zookeeper非阻塞锁，快速失败");
 
     private int lockType;
     private String msg;

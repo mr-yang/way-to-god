@@ -1,7 +1,5 @@
 package com.example.core1.lock;
 
-import org.redisson.api.RLock;
-
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -9,18 +7,50 @@ import java.util.concurrent.TimeUnit;
  * @Date: 2020/8/6 15:01
  * @Description:
  */
-public interface DistributedLocker {
-    RLock lock(String lockKey);
+public interface DistributedLocker<T> {
 
-    RLock lock(String lockKey, int timeout);
+    /**
+     * 加锁
+     * @param lockKey
+     * @return
+     */
+    T lock(String lockKey);
+    /**
+     * 加锁并带锁的续约时间
+     * @param lockKey
+     * @return
+     */
+    T lock(String lockKey, int timeout);
 
-    RLock lock(String lockKey, TimeUnit unit, int timeout);
+    /**
+     * 加锁并带超时时间，如果规定时间内没有获取到锁直接失败
+     * @param lockKey
+     * @param unit
+     * @param timeout
+     * @return
+     */
+    T lock(String lockKey, TimeUnit unit, int timeout);
     boolean tryLock(String lockKey);
 
+    /**
+     * 加锁并带续约时间、超时时间，如果规定时间内没有获取到锁直接失败
+     * @param lockKey
+     * @param unit
+     * @param waitTime
+     * @param leaseTime
+     * @return
+     */
     boolean tryLock(String lockKey, TimeUnit unit, int waitTime, int leaseTime);
 
+    /**
+     * 解锁
+     * @param lockKey
+     */
     void unlock(String lockKey);
-
-    void unlock(RLock lock);
+    /**
+     * 解锁
+     * @param lock
+     */
+    void unlock(T lock);
 }
 

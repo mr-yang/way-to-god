@@ -1,21 +1,23 @@
-package com.example.core1.lock;
+package com.example.core1.lock.redis;
 
+import com.example.core1.lock.DistributedLocker;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.concurrent.TimeUnit;
 
 /**
  * @Auther: xiaoyang
  * @Date: 2020/8/6 15:02
- * @Description: Redisson 实现分布式锁
+ * @Description: 基于Redisson实现的redis方式的分布式锁
  */
 @Slf4j
-@Component
-public class RedisDistributedLocker implements DistributedLocker {
+@Component("redisDistributedLocker")
+public class RedisDistributedLocker implements DistributedLocker<RLock> {
 
     @Autowired
     private RedissonClient redissonClient;
@@ -64,7 +66,9 @@ public class RedisDistributedLocker implements DistributedLocker {
 
     @Override
     public void unlock(RLock lock) {
-        lock.unlock();
+        if(lock != null){
+            lock.unlock();
+        }
     }
 
 }

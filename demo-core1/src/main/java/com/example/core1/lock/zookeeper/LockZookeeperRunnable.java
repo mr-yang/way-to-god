@@ -1,7 +1,9 @@
-package com.example.core1.lock;
+package com.example.core1.lock.zookeeper;
 
+import com.example.core1.lock.DistributedLocker;
+import com.example.core1.lock.LockEnum;
 import lombok.extern.slf4j.Slf4j;
-import org.redisson.api.RLock;
+import org.apache.curator.framework.recipes.locks.InterProcessLock;
 
 import java.util.concurrent.CountDownLatch;
 
@@ -11,25 +13,25 @@ import java.util.concurrent.CountDownLatch;
  * @describe
  */
 @Slf4j
-public class LockRunnable implements Runnable {
+public class LockZookeeperRunnable implements Runnable {
 
 
     public static int count = 0;
 
-    private DistributedLocker locker;
+    private DistributedLocker<InterProcessLock> locker;
     private CountDownLatch countDownLatch;
     private LockEnum lockEnum;
 
-    public LockRunnable() {
+    public LockZookeeperRunnable() {
     }
 
-    public LockRunnable(DistributedLocker redisDistributedLocker, CountDownLatch countDownLatch) {
-        this.locker = redisDistributedLocker;
+    public LockZookeeperRunnable(DistributedLocker<InterProcessLock> zookeeperDistributedLocker, CountDownLatch countDownLatch) {
+        this.locker = zookeeperDistributedLocker;
         this.countDownLatch = countDownLatch;
     }
 
-    public LockRunnable(DistributedLocker redisDistributedLocker, CountDownLatch countDownLatch, LockEnum lockEnum) {
-        this.locker = redisDistributedLocker;
+    public LockZookeeperRunnable(DistributedLocker<InterProcessLock> zookeeperDistributedLocker, CountDownLatch countDownLatch, LockEnum lockEnum) {
+        this.locker = zookeeperDistributedLocker;
         this.countDownLatch = countDownLatch;
         this.lockEnum = lockEnum;
     }
@@ -40,10 +42,10 @@ public class LockRunnable implements Runnable {
             case NO_LOCK:
                 testCount();
                 break;
-            case REDIS_BIO_LOCK:
+            case ZK_BIO_LOCK:
                 testLock();
                 break;
-            case REDIS_NIO_LOCK:
+            case ZK_NIO_LOCK:
                 testFastFailLock();
                 break;
         }
@@ -74,13 +76,13 @@ public class LockRunnable implements Runnable {
         }
     }
 
-    private final String lockKey = "redis-lock-test";
+    private final String lockKey = "/zookeeper-lock-test";
 
     /**
      * 加锁测试
      */
     private void testLock() {
-        RLock lock = null;
+        InterProcessLock lock = null;
         try {
             String name = Thread.currentThread().getName();
             log.info(name + " 线程进入 run 方法");
