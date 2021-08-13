@@ -18,7 +18,7 @@
 
 ​	测试报文：{"grayscaleId":"666"}，grayscaleId为666走灰度服务，其他值都走正式服务
 
-###二、应用到应用灰度测试
+### 二、应用到应用灰度测试
 
 1、启动demo-eureka
 
@@ -40,3 +40,27 @@
 
 ​	测试报文：{"grayscaleId":"666"}，grayscaleId为666走灰度应用集群，其他值都走正式应用集群
 
+
+### 三、Zuul动态路由
+
+
+### 四、分布式锁测试
+
+#### 1、基于Redis分布式锁，基于Redisson框架实现
+
+1、测试
+
+​	2.1、可以通过下面的测试方法做测试 com.example.core1.Core1ApplicationTests.testRedisLock
+
+​	2.2、也可以调用 http://localhost:10010/testRedisLock 测试数据 {"userId":"123123"}
+2、核心逻辑在 com.example.core1.lock.redis.RedisDistributedLocker 类中
+
+#### 2、基于Zookeeper分布式锁，基于Curator框架实现
+
+1、测试
+
+​	2.1、可以通过下面的测试方法做测试 com.example.core1.Core1ApplicationTests.testZookeeperLock
+
+​	2.2、也可以调用 http://localhost:10010/testZookeeperLock 测试数据 {"userId":"123123"}
+    
+2、核心逻辑在 com.example.core1.lock.zookeeper.ZkDistributedLocker 类中
