@@ -24,13 +24,13 @@ public class ZkDistributedLocker implements DistributedLocker<InterProcessLock> 
 
     @Override
     public InterProcessLock lock(String lockKey) {
-        InterProcessMutex interProcessLock =null;
+        InterProcessMutex interProcessLock = null;
         try {
             interProcessLock = new InterProcessMutex(curatorFramework,
                     lockKey);
             interProcessLock.acquire();
         } catch (Exception e) {
-            log.error(lockKey+" zk获取分布式锁异常",e);
+            log.error(lockKey + " zk获取分布式锁异常", e);
             throw new RuntimeException("zk获取分布式锁异常");
         }
         return interProcessLock;
@@ -44,53 +44,67 @@ public class ZkDistributedLocker implements DistributedLocker<InterProcessLock> 
 
     @Override
     public InterProcessLock lock(String lockKey, TimeUnit unit, int timeout) {
-        InterProcessMutex interProcessLock =null;
+        InterProcessMutex interProcessLock = null;
         try {
             interProcessLock = new InterProcessMutex(curatorFramework,
                     lockKey);
-            interProcessLock.acquire(timeout,unit);
+            interProcessLock.acquire(timeout, unit);
         } catch (Exception e) {
-            log.error(lockKey+" zk获取分布式锁异常",e);
+            log.error(lockKey + " zk获取分布式锁异常", e);
         }
         return interProcessLock;
     }
+
     @Override
-    public boolean tryLock(String lockKey) {
+    public InterProcessLock tryLock(String lockKey) {
         try {
             InterProcessMutex interProcessLock = new InterProcessMutex(curatorFramework,
                     lockKey);
-            return interProcessLock.acquire(-1,TimeUnit.MILLISECONDS);
+            if (interProcessLock.acquire(-1, TimeUnit.MILLISECONDS)) {
+                return interProcessLock;
+            }
         } catch (Exception e) {
-            log.error(lockKey+" zk获取分布式锁异常",e);
+            log.error(lockKey + " zk获取分布式锁异常", e);
         }
-        return false;
+        return null;
     }
+
     @Override
-    public boolean tryLock(String lockKey, TimeUnit unit, int waitTime, int leaseTime) {
+    public InterProcessLock tryLock(String lockKey, TimeUnit unit, int waitTime, int leaseTime) {
         try {
             InterProcessMutex interProcessLock = new InterProcessMutex(curatorFramework,
                     lockKey);
-            return interProcessLock.acquire(waitTime,unit);
+            if (interProcessLock.acquire(waitTime, unit)) {
+                return interProcessLock;
+            }
         } catch (Exception e) {
-            log.error(lockKey+" zk获取分布式锁异常",e);
+            log.error(lockKey + " zk获取分布式锁异常", e);
         }
-        return false;
+        return null;
     }
 
     @Override
     public void unlock(String lockKey) {
-        throw  new RuntimeException("zk实现的分布式锁不支持此方式释放锁");
+        try {
+            InterProcessMutex interProcessLock = new InterProcessMutex(curatorFramework,
+                    lockKey);
+            interProcessLock.release();
+        } catch (Exception e) {
+            log.error("zk释放分布式锁异常", e);
+            throw new RuntimeException("zk释放分布式锁异常");
+        }
     }
 
     @Override
     public void unlock(InterProcessLock lock) {
-        if(lock == null){
+        if (lock == null) {
             return;
         }
         try {
             lock.release();
         } catch (Exception e) {
-            log.error("zk释放分布式锁异常",e);
+            log.error("zk释放分布式锁异常", e);
+            throw new RuntimeException("zk释放分布式锁异常");
         }
     }
 

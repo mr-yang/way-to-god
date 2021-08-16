@@ -17,28 +17,23 @@ public class LockZookeeperRunnable implements Runnable {
 
 
     public static int count = 0;
+    private final CountDownLatch waitDownLatch;
 
     private DistributedLocker<InterProcessLock> locker;
     private CountDownLatch countDownLatch;
     private LockEnum lockEnum;
 
-    public LockZookeeperRunnable() {
-    }
 
-    public LockZookeeperRunnable(DistributedLocker<InterProcessLock> zookeeperDistributedLocker, CountDownLatch countDownLatch) {
-        this.locker = zookeeperDistributedLocker;
+    public LockZookeeperRunnable(DistributedLocker zkDistributedLocker, CountDownLatch countDownLatch, LockEnum zkBioLock, CountDownLatch waitDownLatch) {
+        this.locker = zkDistributedLocker;
         this.countDownLatch = countDownLatch;
-    }
-
-    public LockZookeeperRunnable(DistributedLocker<InterProcessLock> zookeeperDistributedLocker, CountDownLatch countDownLatch, LockEnum lockEnum) {
-        this.locker = zookeeperDistributedLocker;
-        this.countDownLatch = countDownLatch;
-        this.lockEnum = lockEnum;
+        this.lockEnum = zkBioLock;
+        this.waitDownLatch = waitDownLatch;
     }
 
     @Override
     public void run() {
-        switch (lockEnum){
+        switch (lockEnum) {
             case NO_LOCK:
                 testCount();
                 break;
@@ -54,16 +49,20 @@ public class LockZookeeperRunnable implements Runnable {
     private void testFastFailLock() {
         String name = Thread.currentThread().getName();
         log.info(name + " 线程进入 run 方法");
-        if (this.locker.tryLock(lockKey)) {
+        InterProcessLock interProcessLock = this.locker.tryLock(lockKey);
+        if (interProcessLock != null) {
             log.info(name + " 线程获取到了锁");
             try {
                 addCont();//执行临界区代码
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
-                this.locker.unlock(lockKey);
+                this.locker.unlock(interProcessLock);
                 log.info(name + "线程释放了锁");
+                waitDownLatch.countDown();
             }
+        } else {
+            waitDownLatch.countDown();
         }
     }
 
@@ -71,6 +70,7 @@ public class LockZookeeperRunnable implements Runnable {
         try {
             countDownLatch.await();
             addCont();//执行临界区代码
+            waitDownLatch.countDown();
         } catch (Exception e) {
             log.error("testCount异常", e);
         }
@@ -96,6 +96,7 @@ public class LockZookeeperRunnable implements Runnable {
             locker.unlock(lock);
             String name = Thread.currentThread().getName();
             log.info(name + "线程释放了锁");
+            waitDownLatch.countDown();
         }
     }
 

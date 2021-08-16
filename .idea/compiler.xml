@@ -16,6 +16,7 @@
     <bytecodeTargetLevel>
       <module name="demo-core2" target="1.8" />
       <module name="demo-core3" target="1.8" />
+      <module name="sentinel-dashboard" target="1.5" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">

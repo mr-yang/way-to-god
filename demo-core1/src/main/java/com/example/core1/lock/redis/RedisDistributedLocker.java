@@ -6,7 +6,6 @@ import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import java.util.concurrent.TimeUnit;
 
@@ -42,20 +41,29 @@ public class RedisDistributedLocker implements DistributedLocker<RLock> {
         lock.lock(timeout, unit);
         return lock;
     }
+
     @Override
-    public boolean tryLock(String lockKey) {
+    public RLock tryLock(String lockKey) {
         RLock lock = redissonClient.getLock(lockKey);
-        return lock.tryLock();
-    }
-    @Override
-    public boolean tryLock(String lockKey, TimeUnit unit, int waitTime, int leaseTime) {
-        RLock lock = redissonClient.getLock(lockKey);
-        try {
-            return lock.tryLock(waitTime, leaseTime, unit);
-        } catch (InterruptedException e) {
-            log.error(String.format("尝试获取锁%s异常"),e);
-            return false;
+        if (lock.tryLock()) {
+            return lock;
         }
+        return null;
+    }
+
+    @Override
+    public RLock tryLock(String lockKey, TimeUnit unit, int waitTime, int leaseTime) {
+
+        try {
+            RLock lock = redissonClient.getLock(lockKey);
+            if (lock.tryLock(waitTime, leaseTime, unit)) {
+                return lock;
+            }
+        } catch (InterruptedException e) {
+            log.error(String.format("尝试获取锁%s异常"), e);
+
+        }
+        return null;
     }
 
     @Override
@@ -66,7 +74,7 @@ public class RedisDistributedLocker implements DistributedLocker<RLock> {
 
     @Override
     public void unlock(RLock lock) {
-        if(lock != null){
+        if (lock != null) {
             lock.unlock();
         }
     }

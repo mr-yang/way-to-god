@@ -23,14 +23,14 @@ class Core1ApplicationTests {
     void testRedisLock() throws Exception {
         // 计数器
         final CountDownLatch countDownLatch = new CountDownLatch(1);
+        final CountDownLatch waitDownLatch = new CountDownLatch(threadNum);
         for (int i = 0; i < threadNum; i++) {
-            LockRedisRunnable myRunnable = new LockRedisRunnable(redisDistributedLocker, countDownLatch, LockEnum.REDIS_NIO_LOCK);
+            LockRedisRunnable myRunnable = new LockRedisRunnable(redisDistributedLocker, countDownLatch, LockEnum.NO_LOCK,waitDownLatch);
             Thread myThread = new Thread(myRunnable, "线程" + i);
             myThread.start();
         }
         countDownLatch.countDown();
-        System.in.read();
-//        Thread.sleep(8000);
+        waitDownLatch.await();
         log.info("count 的值为：{}", LockRedisRunnable.count);
     }
 
@@ -38,15 +38,15 @@ class Core1ApplicationTests {
     void testZookeeperLock() throws Exception {
         // 计数器
         final CountDownLatch countDownLatch = new CountDownLatch(1);
+        final CountDownLatch waitDownLatch = new CountDownLatch(threadNum);
         for (int i = 0; i < threadNum; i++) {
-            LockZookeeperRunnable myRunnable = new LockZookeeperRunnable(zkDistributedLocker, countDownLatch, LockEnum.ZK_BIO_LOCK);
+            LockZookeeperRunnable myRunnable = new LockZookeeperRunnable(zkDistributedLocker, countDownLatch, LockEnum.ZK_NIO_LOCK,waitDownLatch);
             Thread myThread = new Thread(myRunnable, "线程" + i);
             myThread.start();
         }
         countDownLatch.countDown();
-        System.in.read();
-//        Thread.sleep(8000);
-        log.info("count 的值为：{}", LockRedisRunnable.count);
+        waitDownLatch.await();
+        log.info("count 的值为：{}", LockZookeeperRunnable.count);
     }
 
 }

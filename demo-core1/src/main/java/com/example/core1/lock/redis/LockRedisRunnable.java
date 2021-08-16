@@ -17,28 +17,23 @@ public class LockRedisRunnable implements Runnable {
 
 
     public static int count = 0;
+    private final CountDownLatch waitDownLatch;
 
     private DistributedLocker<RLock> locker;
     private CountDownLatch countDownLatch;
     private LockEnum lockEnum;
 
-    public LockRedisRunnable() {
-    }
 
-    public LockRedisRunnable(DistributedLocker<RLock> redisDistributedLocker, CountDownLatch countDownLatch) {
-        this.locker = redisDistributedLocker;
-        this.countDownLatch = countDownLatch;
-    }
-
-    public LockRedisRunnable(DistributedLocker<RLock> redisDistributedLocker, CountDownLatch countDownLatch, LockEnum lockEnum) {
+    public LockRedisRunnable(DistributedLocker redisDistributedLocker, CountDownLatch countDownLatch, LockEnum lockEnum, CountDownLatch waitDownLatch) {
         this.locker = redisDistributedLocker;
         this.countDownLatch = countDownLatch;
         this.lockEnum = lockEnum;
+        this.waitDownLatch = waitDownLatch;
     }
 
     @Override
     public void run() {
-        switch (lockEnum){
+        switch (lockEnum) {
             case NO_LOCK:
                 testCount();
                 break;
@@ -54,7 +49,7 @@ public class LockRedisRunnable implements Runnable {
     private void testFastFailLock() {
         String name = Thread.currentThread().getName();
         log.info(name + " 线程进入 run 方法");
-        if (this.locker.tryLock(lockKey)) {
+        if (this.locker.tryLock(lockKey) != null) {
             log.info(name + " 线程获取到了锁");
             try {
                 addCont();//执行临界区代码
@@ -63,7 +58,10 @@ public class LockRedisRunnable implements Runnable {
             } finally {
                 this.locker.unlock(lockKey);
                 log.info(name + "线程释放了锁");
+                waitDownLatch.countDown();
             }
+        } else {
+            waitDownLatch.countDown();
         }
     }
 
@@ -71,6 +69,7 @@ public class LockRedisRunnable implements Runnable {
         try {
             countDownLatch.await();
             addCont();//执行临界区代码
+            waitDownLatch.countDown();
         } catch (Exception e) {
             log.error("testCount异常", e);
         }
@@ -96,6 +95,7 @@ public class LockRedisRunnable implements Runnable {
             locker.unlock(lock);
             String name = Thread.currentThread().getName();
             log.info(name + "线程释放了锁");
+            waitDownLatch.countDown();
         }
     }
 

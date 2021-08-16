@@ -3,6 +3,11 @@ server:
 spring:
     application:
         name: demo-zuul #应用名
+    cloud:
+        sentinel:
+            transport:
+                port: 8719
+                dashboard: localhost:8080
 zuul:
     #prefix: /api # 添加路由前缀
     #strip-prefix: true # 代理前缀默认会从请求路径中移除，通过该设置关闭移除功能。

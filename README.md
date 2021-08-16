@@ -50,17 +50,18 @@
 
 1、测试
 
-​	2.1、可以通过下面的测试方法做测试 com.example.core1.Core1ApplicationTests.testRedisLock
+​	1.1、可以通过下面的测试方法做测试 com.example.core1.Core1ApplicationTests.testRedisLock
 
-​	2.2、也可以调用 http://localhost:10010/testRedisLock 测试数据 {"userId":"123123"}
+​	1.2、也可以调用 http://localhost:10010/testRedisLock 测试数据 {"userId":"123123"}
+
 2、核心逻辑在 com.example.core1.lock.redis.RedisDistributedLocker 类中
 
 #### 2、基于Zookeeper分布式锁，基于Curator框架实现
 
 1、测试
 
-​	2.1、可以通过下面的测试方法做测试 com.example.core1.Core1ApplicationTests.testZookeeperLock
+​	1.1、可以通过下面的测试方法做测试 com.example.core1.Core1ApplicationTests.testZookeeperLock
 
-​	2.2、也可以调用 http://localhost:10010/testZookeeperLock 测试数据 {"userId":"123123"}
+​	1.2、也可以调用 http://localhost:10010/testZookeeperLock 测试数据 {"userId":"123123"}
     
 2、核心逻辑在 com.example.core1.lock.zookeeper.ZkDistributedLocker 类中
